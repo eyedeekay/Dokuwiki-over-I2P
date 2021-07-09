@@ -121,7 +121,7 @@ hosting is something you can keep up-to-date without breaking your back
 or losing your job, then it's perfectly reasonable for just one person
 to manage and host a hidden service, even on a residential connection.
 
-Which is the chief advantage of DokuWiki, especially combined with
+This is the chief advantage of DokuWiki, especially combined with
 Docker. There are no databases to set up, you can pre-configure the
 administrative user and password, it honors the `http_proxy` environment
 variable. There has never been a situation in which I had to lost
