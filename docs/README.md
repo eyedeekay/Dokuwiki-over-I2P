@@ -50,7 +50,9 @@ Highlights of Docker include:
 Docker is really just another application, on most levels. Once you've used
 it a few times it ceases to be confusing, you'll be passing pretty similar flags
 to every single container you ever build or run, and only very rarely does it
-ever get any more complex than 
+ever get any more complex than the stuff you learn your first few weeks. It's like
+`git`, it has lots of stuff to work with, but you end up using about the same six
+options every time.
 
 ### Dockerhub maybe isn't always your best friend, but that's OK
 
