@@ -1,4 +1,7 @@
 
+install: index
+	cp -v *.* docs
+
 index:
 	@echo "<!DOCTYPE html>" > index.html
 	@echo "<html>" >> index.html
@@ -10,5 +13,4 @@ index:
 	pandoc README.md >> index.html
 	@echo "</body>" >> index.html
 	@echo "</html>" >> index.html
-
 
