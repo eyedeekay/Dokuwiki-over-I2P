@@ -34,8 +34,7 @@ So it pays to learn Docker. Or don't, its your life. But I would.
 
 Highlights of Docker include:
 
- - Run on [Linux](https://docs.docker.com/get-docker/), 
-  [Mac OSX](https://docs.docker.com/docker-for-mac/install/),
+ - Run on [Linux](https://docs.docker.com/get-docker/), [Mac OSX](https://docs.docker.com/docker-for-mac/install/),
   and [Windows](https://docs.docker.com/docker-for-windows/install/) without modification.
  - [An absolutely enormous repository of community packages, Dockerhub](https://hub.docker.com)
  - Automatically restart applications when they crash by passing `--restart=always`
