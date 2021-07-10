@@ -143,8 +143,42 @@ because that's where we're going to start.
 So what is this telling us, and what conclusions should we be drawing
 from it?
 
+`[Name]` This is just the name of the image, in the form `[namespace]/[name]`.
+Often, this will be identical to the github or bitbucket namespace where the
+image source is available. The namespace tends to reveal if the image is
+maintained by an organization or by an individual. Obviously there are
+advantages to choosing an image maintained by an organization.
+
+`[Description]` The description of the image contains information additional
+to the name. It's usually not the most interesting part of the `docker search`
+output.
+
+`[Stars]` As a rule, if only one person is using an image, it's probably
+not up to date. Prioritize images with more users for research, stars will
+be positively correlated to users, and users will be positively correlated
+to eyes on the image, so prioritize images with the most stars.
+
+`[Official]` Docker only has a handful of "official" images which are provided
+by upstream distributions and software packages. Ubuntu, for instance, has an
+official image:
+
+        NAME                                                      DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+        ubuntu                                                    Ubuntu is a Debian-based Linux operating sys…   12481     [OK]       
+
+
+`[Automated]` This means that the image was built on Docker's automated build
+system, and not built on the developer's machine and pushed up to Dockerhub.
+
+So, what images will we evaluate? The two that look the most promising are
+`mprasil/dokuwiki`, and `linuxserver/dokuwiki`. `mprasil/dokuwiki` has a
+[docker hub page here](https://hub.docker.com/r/mprasil/dokuwiki). At the top
+it says "Updated a year ago" which is maybe not the best sign ever. On the other
+hand, [linuxserver/dokuwiki](https://hub.docker.com/r/linuxserver/dokuwiki) was
+updated less than a week ago. That's the one we need.
+
 I2P Pro Tips:
 -------------
+
 
 
 Is this as big an elephant in the room as I think it is?

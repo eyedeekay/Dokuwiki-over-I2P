@@ -52,6 +52,14 @@
     vimagick/dokuwiki              A wiki application licensed under GPL 2 and …   14                   [OK]
     bambucha/dokuwiki              Alpine DokuWiki Docker Container                8                    [OK]</code></pre>
 <p>So what is this telling us, and what conclusions should we be drawing from it?</p>
+<p><code>[Name]</code> This is just the name of the image, in the form <code>[namespace]/[name]</code>. Often, this will be identical to the github or bitbucket namespace where the image source is available. The namespace tends to reveal if the image is maintained by an organization or by an individual. Obviously there are advantages to choosing an image maintained by an organization.</p>
+<p><code>[Description]</code> The description of the image contains information additional to the name. It’s usually not the most interesting part of the <code>docker search</code> output.</p>
+<p><code>[Stars]</code> As a rule, if only one person is using an image, it’s probably not up to date. Prioritize images with more users for research, stars will be positively correlated to users, and users will be positively correlated to eyes on the image, so prioritize images with the most stars.</p>
+<p><code>[Official]</code> Docker only has a handful of “official” images which are provided by upstream distributions and software packages. Ubuntu, for instance, has an official image:</p>
+<pre><code>    NAME                                                      DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+    ubuntu                                                    Ubuntu is a Debian-based Linux operating sys…   12481     [OK]       </code></pre>
+<p><code>[Automated]</code> This means that the image was built on Docker’s automated build system, and not built on the developer’s machine and pushed up to Dockerhub.</p>
+<p>So, what images will we evaluate? The two that look the most promising are <code>mprasil/dokuwiki</code>, and <code>linuxserver/dokuwiki</code>. <code>mprasil/dokuwiki</code> has a <a href="https://hub.docker.com/r/mprasil/dokuwiki">docker hub page here</a>. At the top it says “Updated a year ago” which is maybe not the best sign ever. On the other hand, <a href="https://hub.docker.com/r/linuxserver/dokuwiki">linuxserver/dokuwiki</a> was updated less than a week ago. That’s the one we need.</p>
 <h2 id="i2p-pro-tips">I2P Pro Tips:</h2>
 <h2 id="is-this-as-big-an-elephant-in-the-room-as-i-think-it-is">Is this as big an elephant in the room as I think it is?</h2>
 </body>
