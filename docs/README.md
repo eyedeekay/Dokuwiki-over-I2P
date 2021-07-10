@@ -104,7 +104,7 @@ DokuWiki Decisions:
 
 ### Why I chose DokuWiki
 
-Choosing software which is easy to an instance of is setting yourself
+Choosing software which is easy to maintain an instance of is setting yourself
 up for success. Many hidden services are run by one person, if one is
 lucky one has a backup or possibly a skeleton crew. Only a handful of
 well-organized, mostly non-anonymous organizations have really reliable
