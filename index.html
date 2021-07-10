@@ -85,6 +85,32 @@
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>  <span class="ex">--restart</span> always <span class="kw">\</span></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>  <span class="ex">ghcr.io/linuxserver/dokuwiki</span></span></code></pre></div>
 <p>In this command, we remove the HTTPS port forward since it won’t work over I2P (for now) and we explicitly specifiy that we want to <em>only</em> listen on the localhost with the HTTP port. This will allow us to safely listen locally without exposing our service to devices on the LAN or on the Internet. It also specifies that the container should always restart if it crashes, which will also cause it to start with the docker daemon, and places the config directory in your <code>$HOME/.config/</code> directory.</p>
+<p>But let’s suppose that you want to re-build the whole stack of containers locally. In order to do this, clone each individual parent container and re-build it with the same name as it has on <code>ghcr.io</code>.</p>
+<p>Start with the base image:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co">#! /bin/sh</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="va">WD=$(</span><span class="bu">pwd</span><span class="va">)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="fu">git</span> clone https://github.com/linuxserver/docker-baseimage-alpine</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="bu">cd</span> docker-baseimage-alpine</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="ex">docker</span> build -t ghcr.io/linuxserver/baseimage-alpine:3.14 .</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$WD</span><span class="st">&quot;</span></span></code></pre></div>
+<p>Then the parent image:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co">#! /bin/sh</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="va">WD=$(</span><span class="bu">pwd</span><span class="va">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="fu">git</span> clone https://github.com/linuxserver/docker-baseimage-alpine-nginx</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="bu">cd</span> docker-baseimage-alpine-nginx</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="ex">docker</span> build -t ghcr.io/linuxserver/baseimage-alpine-nginx:3.13 .</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a><span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$WD</span><span class="st">&quot;</span></span></code></pre></div>
+<p>Finally, you can build the application image:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="co">#! /bin/sh</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="va">WD=$(</span><span class="bu">pwd</span><span class="va">)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="fu">git</span> clone https://github.com/linuxserver/docker-dokuwiki</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="bu">cd</span> docker-dokuwiki</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a><span class="ex">docker</span> build -t ghcr.io/linuxserver/dokuwiki</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a><span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$WD</span><span class="st">&quot;</span></span></code></pre></div>
+<p>And the run command will be identical to the one shown above. Once your container is running, wait a few seconds and visit the <a href="http://127.0.0.1:8080/install.php">http://127.0.0.1:8080/install.php</a> to continue setting up your DokuWiki. Finalizing the installation requires you to fill out one page with information:</p>
+<ul>
+<li><img src="install.php.png" title="fig:" alt="install.php" /></li>
+</ul>
 <h2 id="i2p-pro-tips">I2P Pro Tips:</h2>
 <h2 id="is-this-as-big-an-elephant-in-the-room-as-i-think-it-is">Is this as big an elephant in the room as I think it is?</h2>
 </body>

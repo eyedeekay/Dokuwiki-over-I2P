@@ -221,7 +221,50 @@ service to devices on the LAN or on the Internet. It also specifies that the con
 should always restart if it crashes, which will also cause it to start with the docker
 daemon, and places the config directory in your `$HOME/.config/` directory.
 
+But let's suppose that you want to re-build the whole stack of containers locally. In
+order to do this, clone each individual parent container and re-build it with the same
+name as it has on `ghcr.io`.
 
+Start with the base image:
+
+```bash
+#! /bin/sh
+WD=$(pwd)
+git clone https://github.com/linuxserver/docker-baseimage-alpine
+cd docker-baseimage-alpine
+docker build -t ghcr.io/linuxserver/baseimage-alpine:3.14 .
+cd "$WD"
+```
+
+Then the parent image:
+
+```bash
+#! /bin/sh
+WD=$(pwd)
+git clone https://github.com/linuxserver/docker-baseimage-alpine-nginx
+cd docker-baseimage-alpine-nginx
+docker build -t ghcr.io/linuxserver/baseimage-alpine-nginx:3.13 .
+cd "$WD"
+```
+
+Finally, you can build the application image:
+
+```bash
+#! /bin/sh
+WD=$(pwd)
+git clone https://github.com/linuxserver/docker-dokuwiki
+cd docker-dokuwiki
+docker build -t ghcr.io/linuxserver/dokuwiki
+cd "$WD"
+```
+
+And the run command will be identical to the one shown above. Once your container is
+running, wait a few seconds and visit the
+[http://127.0.0.1:8080/install.php](http://127.0.0.1:8080/install.php) to continue
+setting up your DokuWiki. Finalizing the installation requires you to fill out one page
+with information:
+
+ - ![install.php](install.php.png)
 
 I2P Pro Tips:
 -------------
