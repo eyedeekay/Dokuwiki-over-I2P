@@ -268,7 +268,10 @@ with information:
 
 ### Getting I2P Configured
 
-Now that you've 
+Now that you've got DokuWiki configured locally, you can add an I2P Tunnel to connect
+it to the I2P network. DokuWiki is an HTTP Service, so we'll use an I2P HTTP Tunnel to
+create our I2P Site. Navigate to the [Hidden Services Manager](http://127.0.0.1:7657/i2ptunnelmgr/)
+to get started configuring the I2P Tunnel.
 
 Hidden Service Guide Pro Tips:
 ------------------------------
