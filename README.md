@@ -85,10 +85,10 @@ docker search dokuwiki
         bambucha/dokuwiki              Alpine DokuWiki Docker Container                8                    [OK]
         crazymax/dokuwiki              DokuWiki image based on Alpine Linux            7                    
         plaguedr/dokuwiki              DokuWiki is a wiki application licensed unde…   2                    
-        dtwardow/dokuwiki              Dokuwiki Docker Container                       1                    [OK]
+        dtwardow/dokuwiki              DokuWiki Docker Container                       1                    [OK]
 
 To avoid the risk of using a compromised upstream container, research the
-source of the docker image. Pay attention to the `FROM` line of the Dockerfile, and
+source of the docker image. Pay attention to the `FROM` line of the `Dockerfile`, and
 make sure that it corresponds to an "Official" signed base image from
 a distro like Ubuntu, Debian, or Alpine Linux, or that it is from `SCRATCH`.
 If it does not, find the source of the parent image, and repeat this process
@@ -175,6 +175,53 @@ So, what images will we evaluate? The two that look the most promising are
 it says "Updated a year ago" which is maybe not the best sign ever. On the other
 hand, [linuxserver/dokuwiki](https://hub.docker.com/r/linuxserver/dokuwiki) was
 updated less than a week ago. That's the one we need.
+
+Before we continue, let's look at the `Dockerfile`s that describe the containers
+which we will be running. First, the docker-dokuwiki `Dockerfile`:
+
+ - [`Dockerfile 1`](https://github.com/linuxserver/docker-dokuwiki/blob/master/Dockerfile)
+
+Uh-oh, looks like it's *not* from an official image or a `SCRATCH` image as we
+recommended earlier. Instead, it modifies another image, the name suggests
+that it combines `Alpine Linux` with an `nginx` web server. Let's look one level
+deeper at the parent `Dockerfile`.
+
+ - [`Dockerfile 2`](https://github.com/linuxserver/docker-baseimage-alpine-nginx/blob/master/Dockerfile)
+
+Examining this `Dockerfile` confirms the suspicion that it combines Alpine linux witn
+nginx and some modules. But we still haven't reached the base image, that's another level
+down.
+
+ - [`Dockerfile 3`](https://github.com/linuxserver/docker-baseimage-alpine/blob/master/Dockerfile)
+
+At last we're here, and indeed each of the `Dockerfiles` looks non-malicious.
+
+### Getting DokuWiki Configured
+
+Setting up DokuWiki in a Docker container can be done in a couple simple steps.
+The quickest way to get started is to just run a modified version of the command
+from the linuxserver.io readme:
+
+```bash
+docker run -d \
+  --name=dokuwiki \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Europe/London \
+  -p 127.0.0.1:8080:80 \
+  -v $HOME/.config/dokuwiki:/config \
+  --restart always \
+  ghcr.io/linuxserver/dokuwiki
+```
+
+In this command, we remove the HTTPS port forward since it won't work over I2P
+(for now) and we explicitly specifiy that we want to *only* listen on the localhost
+with the HTTP port. This will allow us to safely listen locally without exposing our
+service to devices on the LAN or on the Internet. It also specifies that the container
+should always restart if it crashes, which will also cause it to start with the docker
+daemon, and places the config directory in your `$HOME/.config/` directory.
+
+
 
 I2P Pro Tips:
 -------------

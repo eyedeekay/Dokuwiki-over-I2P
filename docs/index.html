@@ -35,8 +35,8 @@
     bambucha/dokuwiki              Alpine DokuWiki Docker Container                8                    [OK]
     crazymax/dokuwiki              DokuWiki image based on Alpine Linux            7                    
     plaguedr/dokuwiki              DokuWiki is a wiki application licensed unde…   2                    
-    dtwardow/dokuwiki              Dokuwiki Docker Container                       1                    [OK]</code></pre>
-<p>To avoid the risk of using a compromised upstream container, research the source of the docker image. Pay attention to the <code>FROM</code> line of the Dockerfile, and make sure that it corresponds to an “Official” signed base image from a distro like Ubuntu, Debian, or Alpine Linux, or that it is from <code>SCRATCH</code>. If it does not, find the source of the parent image, and repeat this process until the whole stack of images is analyzed. In practice, this is rarely more than one image.</p>
+    dtwardow/dokuwiki              DokuWiki Docker Container                       1                    [OK]</code></pre>
+<p>To avoid the risk of using a compromised upstream container, research the source of the docker image. Pay attention to the <code>FROM</code> line of the <code>Dockerfile</code>, and make sure that it corresponds to an “Official” signed base image from a distro like Ubuntu, Debian, or Alpine Linux, or that it is from <code>SCRATCH</code>. If it does not, find the source of the parent image, and repeat this process until the whole stack of images is analyzed. In practice, this is rarely more than one image.</p>
 <p>To avoid the risk of using an out-of-date upstream container, build your image locally, and all of the parent images as well, unless you are confident in the upstream image being consistently maintained.</p>
 <h2 id="dokuwiki-decisions">DokuWiki Decisions:</h2>
 <h3 id="why-i-chose-dokuwiki">Why I chose DokuWiki</h3>
@@ -60,6 +60,31 @@
     ubuntu                                                    Ubuntu is a Debian-based Linux operating sys…   12481     [OK]       </code></pre>
 <p><code>[Automated]</code> This means that the image was built on Docker’s automated build system, and not built on the developer’s machine and pushed up to Dockerhub.</p>
 <p>So, what images will we evaluate? The two that look the most promising are <code>mprasil/dokuwiki</code>, and <code>linuxserver/dokuwiki</code>. <code>mprasil/dokuwiki</code> has a <a href="https://hub.docker.com/r/mprasil/dokuwiki">docker hub page here</a>. At the top it says “Updated a year ago” which is maybe not the best sign ever. On the other hand, <a href="https://hub.docker.com/r/linuxserver/dokuwiki">linuxserver/dokuwiki</a> was updated less than a week ago. That’s the one we need.</p>
+<p>Before we continue, let’s look at the <code>Dockerfile</code>s that describe the containers which we will be running. First, the docker-dokuwiki <code>Dockerfile</code>:</p>
+<ul>
+<li><a href="https://github.com/linuxserver/docker-dokuwiki/blob/master/Dockerfile"><code>Dockerfile 1</code></a></li>
+</ul>
+<p>Uh-oh, looks like it’s <em>not</em> from an official image or a <code>SCRATCH</code> image as we recommended earlier. Instead, it modifies another image, the name suggests that it combines <code>Alpine Linux</code> with an <code>nginx</code> web server. Let’s look one level deeper at the parent <code>Dockerfile</code>.</p>
+<ul>
+<li><a href="https://github.com/linuxserver/docker-baseimage-alpine-nginx/blob/master/Dockerfile"><code>Dockerfile 2</code></a></li>
+</ul>
+<p>Examining this <code>Dockerfile</code> confirms the suspicion that it combines Alpine linux witn nginx and some modules. But we still haven’t reached the base image, that’s another level down.</p>
+<ul>
+<li><a href="https://github.com/linuxserver/docker-baseimage-alpine/blob/master/Dockerfile"><code>Dockerfile 3</code></a></li>
+</ul>
+<p>At last we’re here, and indeed each of the <code>Dockerfiles</code> looks non-malicious.</p>
+<h3 id="getting-dokuwiki-configured">Getting DokuWiki Configured</h3>
+<p>Setting up DokuWiki in a Docker container can be done in a couple simple steps. The quickest way to get started is to just run a modified version of the command from the linuxserver.io readme:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ex">docker</span> run -d <span class="kw">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>  <span class="ex">--name</span>=dokuwiki <span class="kw">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>  <span class="ex">-e</span> PUID=1000 <span class="kw">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>  <span class="ex">-e</span> PGID=1000 <span class="kw">\</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>  <span class="ex">-e</span> TZ=Europe/London <span class="kw">\</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>  <span class="ex">-p</span> 127.0.0.1:8080:80 <span class="kw">\</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>  <span class="ex">-v</span> <span class="va">$HOME</span>/.config/dokuwiki:/config <span class="kw">\</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>  <span class="ex">--restart</span> always <span class="kw">\</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>  <span class="ex">ghcr.io/linuxserver/dokuwiki</span></span></code></pre></div>
+<p>In this command, we remove the HTTPS port forward since it won’t work over I2P (for now) and we explicitly specifiy that we want to <em>only</em> listen on the localhost with the HTTP port. This will allow us to safely listen locally without exposing our service to devices on the LAN or on the Internet. It also specifies that the container should always restart if it crashes, which will also cause it to start with the docker daemon, and places the config directory in your <code>$HOME/.config/</code> directory.</p>
 <h2 id="i2p-pro-tips">I2P Pro Tips:</h2>
 <h2 id="is-this-as-big-an-elephant-in-the-room-as-i-think-it-is">Is this as big an elephant in the room as I think it is?</h2>
 </body>
