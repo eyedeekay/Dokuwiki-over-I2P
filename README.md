@@ -35,7 +35,7 @@ So it pays to learn Docker. Or don't, its your life. But I would.
 Highlights of Docker include:
 
  - Run on [Linux](https://docs.docker.com/get-docker/), [Mac OSX](https://docs.docker.com/docker-for-mac/install/),
-  and [Windows](https://docs.docker.com/docker-for-windows/install/) without modification.
+  and [Windows](https://docs.docker.com/docker-for-windows/install/) without modification(Usually).
  - [An absolutely enormous repository of community packages, Dockerhub](https://hub.docker.com)
  - Automatically restart applications when they crash by passing `--restart=always`
   `docker run`
@@ -265,6 +265,9 @@ setting up your DokuWiki. Finalizing the installation requires you to fill out o
 with information:
 
  - ![install.php](install.php.png)
+
+Be sure to disable reporting anonymous usage information. It's probably not anonymous
+enough, and we don't want to phone home to anywhere.
 
 ### Getting I2P Configured
 
