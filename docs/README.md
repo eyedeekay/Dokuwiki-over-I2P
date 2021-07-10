@@ -266,11 +266,17 @@ with information:
 
  - ![install.php](install.php.png)
 
+### Getting I2P Configured
+
+Now that you've 
+
+Hidden Service Guide Pro Tips:
+------------------------------
+
+### Take the time to make it easy, for your own sake and others
+
 I2P Pro Tips:
 -------------
 
-
-
-Is this as big an elephant in the room as I think it is?
---------------------------------------------------------
+### Use i2ptunnel.config.d
 
