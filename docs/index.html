@@ -115,10 +115,93 @@
 </ul>
 <p>Be sure to disable reporting anonymous usage information. It’s probably not anonymous enough, and we don’t want to phone home to anywhere.</p>
 <h3 id="getting-i2p-configured">Getting I2P Configured</h3>
-<p>Now that you’ve got DokuWiki configured locally, you can add an I2P Tunnel to connect it to the I2P network. DokuWiki is an HTTP Service, so we’ll use an I2P HTTP Tunnel to create our I2P Site. Navigate to the <a href="http://127.0.0.1:7657/i2ptunnelmgr/">Hidden Services Manager</a> to get started configuring the I2P Tunnel.</p>
-<h2 id="hidden-service-guide-pro-tips">Hidden Service Guide Pro Tips:</h2>
-<h3 id="take-the-time-to-make-it-easy-for-your-own-sake-and-others">Take the time to make it easy, for your own sake and others</h3>
-<h2 id="i2p-pro-tips">I2P Pro Tips:</h2>
-<h3 id="use-i2ptunnel.config.d">Use i2ptunnel.config.d</h3>
+<p>Now that you’ve got DokuWiki configured locally, you can add an I2P Tunnel to connect it to the I2P network. DokuWiki is an HTTP Service, so we’ll use an I2P HTTP Tunnel to create our I2P Site. Navigate to the <a href="http://127.0.0.1:7657/i2ptunnelmgr/">Hidden Services Manager</a> to get started configuring the I2P Tunnel. I2P has extensive tools in place for helping set up different types of hidden services interactively.</p>
+<p>The tool for configuring I2P Tunnels is the Hidden Services Manager, which is an I2P Application you can access by visiting the URL <a href="http://127.0.0.1:7657/i2ptunnelmgr">http://127.0.0.1:7657/i2ptunnelmgr</a> in a web browser. Because DokuWiki is a regular HTTP service, with no federation or anything like that to worry about, you probably won’t need to change <em>any</em> of the defaults to effectively run your DokuWiki service. So, start the <a href="http://127.0.0.1:7657/i2ptunnel/wizard">Setup Wizard</a> to begin the process of tunnel configuration.</p>
+<ol type="1">
+<li>Since DokuWiki is a server application, we need a server tunnel.<br />
+<img src="i2ptunnel(0).png" alt="Server Tunnel" /></li>
+<li>It’s an HTTP Server, so we should take advantage of I2P’s tunnel for HTTP Servers.<br />
+<img src="i2ptunnel(1).png" alt="HTTP Server" /></li>
+<li>Give your HTTP Server Tunnel a descriptive name related to the DokuWiki it is serving.<br />
+<img src="i2ptunnel(2).png" alt="Tunnel Name" /></li>
+<li>Point the hidden service at the DokuWiki service. In this example, that is 127.0.0.1:8080.<br />
+<img src="i2ptunnel(3).png" alt="Tunnel Host" /></li>
+<li>Configure the tunnel to start automatically.<br />
+<img src="i2ptunnel(4).png" alt="Start Automatically" /></li>
+<li>Review and save the defaults.<br />
+<img src="i2ptunnel(5).png" alt="Review" /></li>
+</ol>
+<h4 id="sharing-addresses">Sharing Addresses</h4>
+<h5 id="sharing-a-base32-address">Sharing a Base32 Address:</h5>
+<p>After these basic steps, your hidden service will become available in a few seconds. You can find the address by returning to <a href="http://127.0.0.1:7657/i2ptunnelmgr">http://127.0.0.1:7657/i2ptunnelmgr</a> and finding the tunnel in the top section, labeled “I2P Hidden Services.”</p>
+<ul>
+<li>Here’s what it looks like:<br />
+<img src="address.png" alt="Base32 and description only" /></li>
+</ul>
+<p>Copy-and-Paste the line ending with <code>.b32.i2p</code> into your I2P browser, or click the “Preview” button to visit your DokuWiki server using I2P. You can share this “Base32 Address” with other I2P users to allow them to access your DokuWiki.</p>
+<h5 id="sharing-an-unregistered-hostname">Sharing an Unregistered Hostname:</h5>
+<p>I2P has a flexible system for sharing human-readable addresses built-in. The Address Book is available to every I2P application that wants it. In order to share a site with a human-readable hostname, you’ll need to generate an “Address Helper” link and share it with your peers. The Hidden Services Manager can help you with this. Return to <a href="http://127.0.0.1:7657/i2ptunnelmgr">http://127.0.0.1:7657/i2ptunnelmgr</a> and click the link to your DokuWiki tunnel’s Configuration Page. You’ll see something that looks like this:</p>
+<ul>
+<li>Fill in your hostname where you see the red circle, then click “Save” at the bottom of the page:<br />
+<img src="hostname.png" alt="hostname" /></li>
+</ul>
+<p>Once you have saved the settings, you will be returned to the Hidden Services Manager home page. A new element will be visible on the DokuWiki section of the Hidden Services listing:</p>
+<ul>
+<li>The new Text Area contains a pre-generated Address Helper link for you to share.<br />
+<img src="addresshelper.png" alt="addresshelper" /></li>
+</ul>
+<p>When you share a link like this, the recipient is prompted to add the address to their Address Book, making it accessible at the human-readable URL.</p>
+<h5 id="registering-a-hostname">Registering a Hostname*</h5>
+<p>If you want to register a hostname, and thus propagate it out to the various hostname subscription providers, the best place to do that right now is <a href="http://stats.i2p/i2p/addkey.html">stats.i2p</a>. Registries are run by peers in the I2P network, in this case a prominent, long-time I2P developer who has earned immense trust in the community.</p>
+<ul>
+<li>zzz’s Terms of Service. They’re important, if you don’t like them then run your own registry.<br />
+<img src="statstos.png" alt="stats.i2p TOS" /></li>
+</ul>
+<p>In order to carry out your registration, you will need to copy an “Authentication string” from within the Hidden Service Manager. Go to the DokuWiki tunnel configuration page in the Hidden Service Manager and click the button that says “Registration Authentication.” This will reveal the required authentication strings.</p>
+<ul>
+<li>Register your hostname using these authentication strings.<br />
+<img src="authstrings.png" alt="Authentication Strings" /></li>
+</ul>
+<p>Once you have your authentication string, add it to the form on stats.i2p:</p>
+<ul>
+<li><img src="statsreg.png" title="fig:" alt="Register" /></li>
+</ul>
+<p>* It is not recommended to use Registered Hostnames in combination with Encrypted LeaseSets.</p>
+<h4 id="i2p-pro-tips">I2P Pro Tips:</h4>
+<p>I2P has several features which appeal to certain use-cases and niches, in particular it has options for imposing cryptographic requirements on the ability to discover a tunnel endpoint and connect to it, and the ability to accept as input packaged configuration files(And applications, but that’s a discussion for another day).</p>
+<h5 id="use-blinded-or-encrypted-leasesets">Use Blinded or Encrypted LeaseSets</h5>
+<p>Blinded LeaseSets are roughly equivalent to blinding in Tor’s onionv3 services, but for I2P. It’s used to prevent Floodfills which distribute information about I2P destinations in the NetDB from being able to discover a hidden service in floodfill data. If you don’t want other people to be able to know your site exists without you telling them, blinded LeaseSets would likely be a necessary part of this strategy.</p>
+<p>Encrypted LeaseSets are LeaseSets which are published to the NetDB encrypted, so that only a person who is in possession of the correct keys can decrypt the LeaseSet and discover the information required to connect to a site. If you want to have access-controls on your site which prevent unauthorized users from discovering how to connect to your I2P Site, use Encrypted LeaseSets.</p>
+<h5 id="use-i2ptunnel.config.d">Use i2ptunnel.config.d</h5>
+<p>Once you have a Hidden Service set up, the nice thing to do is to document your configuration and share it with the rest of the world. One thing you can do which makes this easier for people who are reviewing, modifying, or reproducing your service is to look in your i2ptunnel.config.d directory and find the file that configures the hidden service tunnel, remove any superfluous or sensitive information, and publish it somewhere anyone can use it. Here is such a config file for the DokuWiki service which we just set up.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode ini"><code class="sourceCode ini"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="dt">description</span><span class="ot">=</span><span class="st">Serves a DokuWiki, perhaps for your project</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="dt">name</span><span class="ot">=</span><span class="st">DokuWiki Server</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="dt">option.enableUniqueLocal</span><span class="ot">=</span><span class="kw">false</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a><span class="dt">option.i2cp.destination.sigType</span><span class="ot">=</span><span class="dv">7</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="dt">option.i2cp.leaseSetEncType</span><span class="ot">=</span><span class="dv">4</span><span class="st">,</span><span class="dv">0</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a><span class="dt">option.i2cp.reduceIdleTime</span><span class="ot">=</span><span class="dv">1200000</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a><span class="dt">option.i2cp.reduceOnIdle</span><span class="ot">=</span><span class="kw">false</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a><span class="dt">option.i2cp.reduceQuantity</span><span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a><span class="dt">option.inbound.backupQuantity</span><span class="ot">=</span><span class="dv">0</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a><span class="dt">option.inbound.length</span><span class="ot">=</span><span class="dv">3</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a><span class="dt">option.inbound.lengthVariance</span><span class="ot">=</span><span class="dv">0</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a><span class="dt">option.inbound.nickname</span><span class="ot">=</span><span class="st">DokuWiki Server</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a><span class="dt">option.inbound.quantity</span><span class="ot">=</span><span class="dv">2</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true"></a><span class="dt">option.outbound.backupQuantity</span><span class="ot">=</span><span class="dv">0</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true"></a><span class="dt">option.outbound.length</span><span class="ot">=</span><span class="dv">3</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true"></a><span class="dt">option.outbound.lengthVariance</span><span class="ot">=</span><span class="dv">0</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true"></a><span class="dt">option.outbound.nickname</span><span class="ot">=</span><span class="st">DokuWiki Server</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true"></a><span class="dt">option.outbound.quantity</span><span class="ot">=</span><span class="dv">2</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true"></a><span class="dt">option.rejectInproxy</span><span class="ot">=</span><span class="kw">false</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true"></a><span class="dt">option.rejectReferer</span><span class="ot">=</span><span class="kw">false</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true"></a><span class="dt">option.rejectUserAgents</span><span class="ot">=</span><span class="kw">false</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true"></a><span class="dt">option.shouldBundleReplyInfo</span><span class="ot">=</span><span class="kw">false</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true"></a><span class="dt">option.useSSL</span><span class="ot">=</span><span class="kw">false</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true"></a><span class="dt">privKeyFile</span><span class="ot">=</span><span class="st">i2ptunnel17-privKeys.dat</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true"></a><span class="dt">spoofedHost</span><span class="ot">=</span><span class="st">wiki.idk.i2p</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true"></a><span class="dt">startOnLoad</span><span class="ot">=</span><span class="kw">true</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true"></a><span class="dt">targetHost</span><span class="ot">=</span><span class="dv">127</span><span class="st">.</span><span class="dv">0</span><span class="st">.</span><span class="fl">0.1</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true"></a><span class="dt">targetPort</span><span class="ot">=</span><span class="dv">8080</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true"></a><span class="dt">type</span><span class="ot">=</span><span class="st">httpserver</span></span></code></pre></div>
 </body>
 </html>

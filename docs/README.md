@@ -274,15 +274,160 @@ enough, and we don't want to phone home to anywhere.
 Now that you've got DokuWiki configured locally, you can add an I2P Tunnel to connect
 it to the I2P network. DokuWiki is an HTTP Service, so we'll use an I2P HTTP Tunnel to
 create our I2P Site. Navigate to the [Hidden Services Manager](http://127.0.0.1:7657/i2ptunnelmgr/)
-to get started configuring the I2P Tunnel.
+to get started configuring the I2P Tunnel. I2P has extensive tools in place for
+helping set up different types of hidden services interactively.
 
-Hidden Service Guide Pro Tips:
-------------------------------
+The tool for configuring I2P Tunnels is the Hidden Services Manager, which is an
+I2P Application you can access by visiting the URL [http://127.0.0.1:7657/i2ptunnelmgr](http://127.0.0.1:7657/i2ptunnelmgr)
+in a web browser. Because DokuWiki is a regular HTTP service, with no federation
+or anything like that to worry about, you probably won't need to change *any*
+of the defaults to effectively run your DokuWiki service. So, start the
+[Setup Wizard](http://127.0.0.1:7657/i2ptunnel/wizard) to begin the process of
+tunnel configuration.
 
-### Take the time to make it easy, for your own sake and others
+1. Since DokuWiki is a server application, we need a server tunnel.  
+![Server Tunnel](i2ptunnel(0).png)
+2. It's an HTTP Server, so we should take advantage of I2P's tunnel for HTTP Servers.  
+![HTTP Server](i2ptunnel(1).png)
+3. Give your HTTP Server Tunnel a descriptive name related to the DokuWiki it is serving.  
+![Tunnel Name](i2ptunnel(2).png)
+4. Point the hidden service at the DokuWiki service. In this example, that is 127.0.0.1:8080.  
+![Tunnel Host](i2ptunnel(3).png)
+5. Configure the tunnel to start automatically.  
+![Start Automatically](i2ptunnel(4).png)
+6. Review and save the defaults.  
+![Review](i2ptunnel(5).png)
 
-I2P Pro Tips:
--------------
+#### Sharing Addresses
 
-### Use i2ptunnel.config.d
+##### Sharing a Base32 Address:
 
+After these basic steps, your hidden service will become available in a few
+seconds. You can find the address by returning to [http://127.0.0.1:7657/i2ptunnelmgr](http://127.0.0.1:7657/i2ptunnelmgr)
+and finding the tunnel in the top section, labeled "I2P Hidden Services."
+
+ - Here's what it looks like:  
+ ![Base32 and description only](address.png)
+
+Copy-and-Paste the line ending with `.b32.i2p` into your I2P browser, or click
+the "Preview" button to visit your DokuWiki server using I2P. You can share
+this "Base32 Address" with other I2P users to allow them to access your
+DokuWiki.
+
+##### Sharing an Unregistered Hostname:
+
+I2P has a flexible system for sharing human-readable addresses built-in. The
+Address Book is available to every I2P application that wants it. In order to
+share a site with a human-readable hostname, you'll need to generate an
+"Address Helper" link and share it with your peers. The Hidden Services Manager
+can help you with this. Return to [http://127.0.0.1:7657/i2ptunnelmgr](http://127.0.0.1:7657/i2ptunnelmgr)
+and click the link to your DokuWiki tunnel's Configuration Page. You'll see
+something that looks like this:
+
+ - Fill in your hostname where you see the red circle, then click "Save" at the
+ bottom of the page:  
+ ![hostname](hostname.png)
+
+Once you have saved the settings, you will be returned to the Hidden Services
+Manager home page. A new element will be visible on the DokuWiki section of the
+Hidden Services listing:
+
+ - The new Text Area contains a pre-generated Address Helper link for you to
+ share.  
+ ![addresshelper](addresshelper.png)
+
+When you share a link like this, the recipient is prompted to add the address
+to their Address Book, making it accessible at the human-readable URL.
+
+##### Registering a Hostname*
+
+If you want to register a hostname, and thus propagate it out to the various
+hostname subscription providers, the best place to do that right now is
+[stats.i2p](http://stats.i2p/i2p/addkey.html). Registries are run by peers in
+the I2P network, in this case a prominent, long-time I2P developer who has
+earned immense trust in the community.
+
+ - zzz's Terms of Service. They're important, if you don't like them then run
+ your own registry.  
+ ![stats.i2p TOS](statstos.png)
+
+In order to carry out your registration, you will need to copy an
+"Authentication string" from within the Hidden Service Manager. Go to the
+DokuWiki tunnel configuration page in the Hidden Service Manager and click the
+button that says "Registration Authentication." This will reveal the required
+authentication strings.
+
+ - Register your hostname using these authentication strings.  
+ ![Authentication Strings](authstrings.png)
+
+Once you have your authentication string, add it to the form on stats.i2p:
+
+ - ![Register](statsreg.png)
+
+\* It is not recommended to use Registered Hostnames in combination with
+Encrypted LeaseSets.
+
+#### I2P Pro Tips:
+
+I2P has several features which appeal to certain use-cases and niches, in
+particular it has options for imposing cryptographic requirements on the ability
+to discover a tunnel endpoint and connect to it, and the ability to accept as
+input packaged configuration files(And applications, but that's a discussion for
+another day).
+
+##### Use Blinded or Encrypted LeaseSets
+
+Blinded LeaseSets are roughly equivalent to blinding in Tor's onionv3 services,
+but for I2P. It's used to prevent Floodfills which distribute information about
+I2P destinations in the NetDB from being able to discover a hidden service in
+floodfill data. If you don't want other people to be able to know your site
+exists without you telling them, blinded LeaseSets would likely be a necessary
+part of this strategy.
+
+Encrypted LeaseSets are LeaseSets which are published to the NetDB encrypted, so
+that only a person who is in possession of the correct keys can decrypt the
+LeaseSet and discover the information required to connect to a site. If you want
+to have access-controls on your site which prevent unauthorized users from
+discovering how to connect to your I2P Site, use Encrypted LeaseSets.
+
+##### Use i2ptunnel.config.d
+
+Once you have a Hidden Service set up, the nice thing to do is to document your
+configuration and share it with the rest of the world. One thing you can do
+which makes this easier for people who are reviewing, modifying, or reproducing
+your service is to look in your i2ptunnel.config.d directory and find the file 
+that configures the hidden service tunnel, remove any superfluous or sensitive
+information, and publish it somewhere anyone can use it. Here is such a config
+file for the DokuWiki service which we just set up.
+
+```ini
+description=Serves a DokuWiki, perhaps for your project
+name=DokuWiki Server
+option.enableUniqueLocal=false
+option.i2cp.destination.sigType=7
+option.i2cp.leaseSetEncType=4,0
+option.i2cp.reduceIdleTime=1200000
+option.i2cp.reduceOnIdle=false
+option.i2cp.reduceQuantity=1
+option.inbound.backupQuantity=0
+option.inbound.length=3
+option.inbound.lengthVariance=0
+option.inbound.nickname=DokuWiki Server
+option.inbound.quantity=2
+option.outbound.backupQuantity=0
+option.outbound.length=3
+option.outbound.lengthVariance=0
+option.outbound.nickname=DokuWiki Server
+option.outbound.quantity=2
+option.rejectInproxy=false
+option.rejectReferer=false
+option.rejectUserAgents=false
+option.shouldBundleReplyInfo=false
+option.useSSL=false
+privKeyFile=i2ptunnel17-privKeys.dat
+spoofedHost=wiki.idk.i2p
+startOnLoad=true
+targetHost=127.0.0.1
+targetPort=8080
+type=httpserver
+```
